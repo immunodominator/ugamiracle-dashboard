@@ -54,7 +54,7 @@ class Dashboard extends React.Component{
         return <><Row className="filledRow">
             <div className="donationTable">
                 <div className="donationAlert donationAlertHidden" id="donationAlert">
-                    <h1><strong>{this.state.bigDonation ? this.state.bigDonation.recipientName : "Someone"}</strong> is a hero and raised <strong>${this.state.bigDonation ? this.state.bigDonation.amount.toFixed(2) : 0}</strong>!</h1>
+                    <h1><strong>{this.state.bigDonation ? this.state.bigDonation.recipientName : "Someone"}</strong> just received a donation of <strong>${this.state.bigDonation ? this.state.bigDonation.amount.toFixed(2) : 0}</strong>!</h1>
                 </div>
                 <RecentDonations donations={this.state.donations}/>
             </div>
@@ -62,8 +62,8 @@ class Dashboard extends React.Component{
         <Row style={{display: "inline-block"}}>
             <div className="countdown">
              
-                <Countdown date={new Date("Mar 29, 2025 23:45:00")} daysInHours={true}/>
-                <span style={{padding: 0}}> until UGA Miracle!</span>
+                <Countdown date={new Date("Feb 26, 2022 23:45:00")} daysInHours={true}/>
+                <span style={{padding: 0}}> until Dance Marathon Total Reveal!</span>
                
             </div>
         </Row>
