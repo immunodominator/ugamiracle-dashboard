@@ -18,37 +18,53 @@ class Dashboard extends React.Component{
 
     }
 
-    componentDidMount(){
-        //this.interval = setInterval(this.poll, this.state.delay);
-        this.poll();
+    componentDidMount() {
+    this.interval = setInterval(this.poll, this.state.delay); 
+    this.poll();  
+}
     }
 
     componentWillUnmount(){
         clearInterval(this.interval);
     }
 
-    poll = () => {
-        this.setState({pollingCount: this.state.pollingCount + 1, oldDonations: this.state.donations});
-        fetch('https://events.dancemarathon.com/api/events/6212/donations?limit=5')
-            .then(response => response.json())
-            .then(data => {
-                this.setState({donations: data})
+poll = () => {
+    fetch('https://events.dancemarathon.com/api/events/6212/donations?limit=5')
+        .then(response => response.json())
+        .then(data => {
+            this.setState(prevState => {
+                const oldDonationIDs = prevState.donations.map(o => o.donationID);
+                
+                let newBigDonation = null;
                 data.forEach(d => {
-                    if(!this.state.oldDonations.map(o => o.donationID).includes(d.donationID) && d.amount >= 50.0){
-                        this.setState({bigDonation: d});
-                        document.getElementById('donationAlert').classList.remove("donationAlertHidden");
-                        this.start();
+                    if (!oldDonationIDs.includes(d.donationID) && d.amount >= 50.0) {
+                        newBigDonation = d;
                     }
                 });
+
+                return {
+                    donations: data,
+                    oldDonations: prevState.donations, // Keep track of previous donations
+                    bigDonation: newBigDonation
+                };
+            }, () => {
+                if (this.state.bigDonation) {
+                    document.getElementById('donationAlert').classList.remove("donationAlertHidden");
+                    this.start();
+                }
+            });
+        })
+        .catch(error => console.error("Error fetching donations:", error));
+};
+
             });
     }
 
-    start(){
-        var popup = setInterval(function() {
-            document.getElementById('donationAlert').classList.add("donationAlertHidden");
-            clearInterval(popup);
-        },8000);
-    }
+start() {
+    setTimeout(() => {
+        document.getElementById('donationAlert').classList.add("donationAlertHidden");
+    }, 8000);
+}
 
     render(){
         return <><Row className="filledRow">
